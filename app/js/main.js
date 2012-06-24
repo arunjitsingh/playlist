@@ -13,14 +13,25 @@ stubs.getResponse = function() {
 };
 
 
-$(function() {
+var player = new Player();
   
-  var player = new Player();
-  
-  
-  
-  var App = new PlaylistRouter();
+var worker = new Worker('js/worker.js');
+worker.addEventListener('message', function(event) {
+  if (event.data) {
+    console.log(event.data);
+  }
+  worker.terminate();
+}, false);
 
-  Backbone.history.start({pushState: true});
 
-});
+send = function() {
+  var ui = new Uint8Array([0x30, 0x31, 0x32, 0x33, 0x34, 0x35])
+  worker.postMessage({'message': 'read', 'buffer': ui.buffer});
+};
+
+
+var App = new PlaylistRouter();
+
+Backbone.history.start({pushState: true});
+
+

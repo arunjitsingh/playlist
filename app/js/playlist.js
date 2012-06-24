@@ -66,6 +66,7 @@ var Playlist = Backbone.Collection.extend({
 
 
 
+/** The thing that figures out what song to play. */
 var Player = Backbone.Model.extend({
   defaults: {
     'currentIndex': 0,
@@ -109,6 +110,56 @@ var Player = Backbone.Model.extend({
   currentSongUrl: function() {
     var song = this.playlist.at(this.get('currentIndex'));
     return song.isPlayable() ? (song.get('local.url') || song.get('url')) : '';
+  }
+});
+
+
+//----------------- SongWorker -----------------
+
+
+
+/** Initializes a worker and sends it the file buffer. */
+var SongWorker = Song.extend({
+  defaults: {
+    buffer: new ArrayBuffer(0)
+  },
+
+  initialize: function() {
+    _.bindAll(this, 'workerMessage_');
+    this.worker_ = new Worker('js/worker.js');
+    this.worker_.addEventListener('message', this.workerMessage_, false);
+    this.worker_.postMessage({'message': 'init', 'buffer': this.get('buffer')});
+  },
+
+  setLocalTags_: function(tags) {
+    var validKeys = ['title', 'artist', 'album', 'duration', 'local.guid',
+                     'local.artwork', 'local.url'];
+    var obj = {};
+    validKeys.forEach(function(key) {
+      obj[key] = tags[key] || '';
+    });
+    this.set(obj);
+  },
+
+  updateWithServerResponse_: function(content) {},
+
+  workerMessage_: function(event) {
+    switch (event.data.message) {
+      case 'loading':
+        this.set({'state': 'loading'});
+        break;
+      case 'uploading':
+        this.set({'state': 'uploading'});
+        break;
+      case 'loaded':
+        this.setLocalTags_(event.data.tags);
+        break;
+      case 'uploaded':
+        this.updateWithServerResponse_(event.data.content)
+        break;
+      case 'done':
+        this.worker_.terminate();
+    }
   }
 });
 
@@ -161,6 +212,7 @@ var PlaylistRouter = Backbone.Router.extend({
   },
 
   home: function() {
-    $('#playlist').empty();
+    var $playlist = $('#playlist').empty();
+    $playlist.on('dragover', this.dragover);
   }
 });
