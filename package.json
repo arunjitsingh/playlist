@@ -1,0 +1,15 @@
+{
+  "author": "Arunjit Singh <arunjit@me.com> (https://arunjitsingh.github.com/)",
+  "name": "playlist",
+  "description": "`Playlist` allows saving music to the App Engine blobstore and accessing it anywhere. It includes an HTML5 app to listen to and upload music",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/arunjitsingh/playlist.git"
+  },
+  "engines": {
+    "node": ">0.6.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
