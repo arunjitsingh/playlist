@@ -161,9 +161,13 @@ button {
   -moz-transition: all 0.15s ease-in-out;
   transition: all 0.15s ease-in-out;
 }
-button:hover {
+button:hover,
+button:focus {
   background-color: #f1f1f1;
   color: #333;
+}
+button:focus {
+  outline: double #28b930;
 }
 button:active {
   background-color: #e5e5e5;
@@ -332,7 +336,6 @@ footer .other {
   display: inline-block;
   font-family: "CantarellRegular";
   height: 256px;
-  overflow: hidden;
   position: relative;
   -webkit-transition: border-color 0.25s ease-in-out;
   -moz-transition: border-color 0.25s ease-in-out;
@@ -382,7 +385,9 @@ footer .other {
   background-image: url("../images/pause_white.svg");
 }
 .song.selected .play:hover,
-.song.playing .play:hover {
+.song.playing .play:hover,
+.song.selected .play:focus,
+.song.playing .play:focus {
   background-image: url("../images/pause.svg");
 }
 .song.selected .delete,
@@ -404,7 +409,8 @@ footer .other {
   background-image: url("../images/play.svg");
 }
 .song .delete,
-.song .delete:hover {
+.song .delete:hover,
+.song .delete:focus {
   background-image: url("../images/cross.svg");
 }
 .song .artwork,
