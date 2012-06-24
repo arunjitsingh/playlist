@@ -9,30 +9,111 @@
  *     @see http://www.opensource.org/licenses/mit-license.php for details.
  */
 
+//================= Models =================
+
 
 
 /** A song model */
 var Song = Backbone.Model.extend({
   defaults: {
-    id: '',           // {string} ID
-    title: '',        // {string} Title
-    artist: '',       // {string} Artist
-    album: '',        // {string} Album
-    duration: '',     // {string} Duration (mm:ss)
-    artwork: '',      // {string} Artwork URL
-    url: '',          // {string} URL of the song file
-    year: 1900,       // {number} Year of release
-    state: 'loading', // {string} State (loading, uploading, etc)
+    'guid': '',         // {string} ID
+    'title': '',        // {string} Title
+    'artist': '',       // {string} Artist
+    'album': '',        // {string} Album
+    'duration': '',     // {string} Duration (mm:ss)
+    'artwork': '',      // {string} Artwork URL
+    'url': '',          // {string} URL of the song file
+    'year': 1900,       // {number} Year of release
+    'state': 'loading', // {string} State (loading, uploading, etc)
 
-    'local.id': '',
+    'local.guid': '',
     'local.artwork': '',
     'local.url': ''
   },
 
   initialize: function() {
-    this.set('local.id', Date.now().toString(16));
+    _.bindAll(this, 'updateState');
+    this.set({'local.guid': Date.now().toString(16)});
+    this.on('change:local.url', this.updateState);
+    this.on('change:url', this.updateState);
+  },
+
+  updateState: function() {
+    if (this.get('local.url') || this.get('url')) {
+      this.set({'state': 'playable'});
+    }
+  },
+
+  isPlayable: function() {
+    return this.get('state') == 'playable';
   }
 });
+
+
+
+/** A song collection is called a 'Playlist' */
+var Playlist = Backbone.Collection.extend({
+  model: Song,
+
+  isFirstSong: function(index) {
+    return (this.models.length && (index == 0));
+  },
+
+  isLastSong: function(index) {
+    return (this.models.length && (index == (this.models.length - 1)));
+  }
+});
+
+
+
+var Player = Backbone.Model.extend({
+  defaults: {
+    'currentIndex': 0,
+    'state': 'paused'
+  },
+
+  initialize: function() {
+    this.playlist = new Playlist();
+  },
+
+  reset: function() {
+    this.set({'currentIndex': 0, 'state': 'paused'});
+  },
+
+  play: function() {
+    this.set({'state': 'playing'});
+    this.trigger('change:currentIndex');
+  },
+
+  pause: function() {
+    this.set({'state': 'paused'});
+  },
+
+  next: function() {
+    var idx = this.get('currentIndex');
+    if (this.playlist.isLastSong(idx)) {
+      this.set({'currentIndex': 0});
+      this.pause();
+    } else {
+      this.set({'currentIndex': idx + 1});
+    }
+  },
+
+  previous: function() {
+    var idx = this.get('currentIndex');
+    if (!this.playlist.isFirstSong(idx)) {
+      this.set({'currentIndex': idx - 1});
+    }
+  },
+
+  currentSongUrl: function() {
+    var song = this.playlist.at(this.get('currentIndex'));
+    return song.isPlayable() ? (song.get('local.url') || song.get('url')) : '';
+  }
+});
+
+
+//================= Views =================
 
 
 
@@ -45,8 +126,8 @@ var SongView = Backbone.View.extend({
 
   initialize: function() {
     _.bindAll(this, 'render', 'stateChanged');
-    this.model.bind('change', this.render);
-    this.model.bind('change:state', this.stateChanged)
+    this.model.on('change', this.render);
+    this.model.on('change:state', this.stateChanged);
   },
 
   render: function() {
@@ -62,7 +143,24 @@ var SongView = Backbone.View.extend({
 
 
 
-/** A song collection is called a 'Playlist' */
-var Playlist = Backbone.Collection.extend({
-  model: Song
+var NowPlayingView = Backbone.View.extend({
+
+  className: 'np-song',
+
+  template: Handlebars.compile($("np-song-tpl").html())
+});
+
+
+//================= Router =================
+
+
+
+var PlaylistRouter = Backbone.Router.extend({
+  routes: {
+    '': 'home'
+  },
+
+  home: function() {
+    $('#playlist').empty();
+  }
 });

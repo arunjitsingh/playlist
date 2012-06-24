@@ -1,20 +1,26 @@
-var s = new Song({title: 'Rolling in the Deep',
-                  artist: 'Adele',
-                  album: '21',
-                  duration: '4:28',
-                  year: 2011,
-                  artwork: 'http://gangster.squarespace.com/storage/adele_21.jpg'});
+var stubs = {};
+stubs.getResponse = function() {
+  var response = {ok: true};
+  response.content = [{
+    title: 'Rolling in the Deep',
+    artist: 'Adele',
+    album: '21',
+    duration: '4:28',
+    year: 2011,
+    artwork: 'http://gangster.squarespace.com/storage/adele_21.jpg'
+  }];
+  return JSON.stringify(response);
+};
 
-var p = new Playlist();
-p.add(s);
 
-$('#playlist').empty();
-for (var i = 0; i < 4; ++i) {
-  var v = new SongView({model: s});
-  var el = v.render().el
-  $('#playlist').append(el);
+$(function() {
+  
+  var player = new Player();
+  
+  
+  
+  var App = new PlaylistRouter();
 
-  i == 0 && $(el).attr('data-state', 'loading').find('img').attr('src', '');
-  i == 1 && ($(el).get(0).dataset.state = 'uploading');
-  i == 2 && $(el).addClass('playing');
-}
+  Backbone.history.start({pushState: true});
+
+});
