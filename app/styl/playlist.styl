@@ -6,9 +6,22 @@
   border-color: transparent
   font-family: "CantarellRegular"
   height: 256px
-  width: 256px
+  overflow: hidden
   position: relative
   transition: border-color .25s ease-in-out
+  width: 256px
+  &.uploading
+    .progress
+      display: block
+  &.loading
+    .info
+    .controls
+      display: none
+    .progress
+      display: block
+      .bar
+        background-color: aj-rgba(white, .5)
+        width: 100%
   &.selected
   &.playing
     border-color: aj-rgba(black, .9)
@@ -39,12 +52,23 @@
   .delete:hover
     background-image: url(../images/cross.svg)
   .artwork
+  .progress
   .info
   .controls
     position: absolute
   .artwork
+    background-color: aj-rgba(#333, .8)
     height: 256px
+  .artwork
+  .progress
     width: 256px
+  .progress
+    display: none
+    .bar
+      background-color: aj-rgba(aj-blue, .5)
+      height: 20px
+      transition: width .1s linear
+      width: 15%
   .info
   .controls
     background-color: aj-rgba(white, .75)

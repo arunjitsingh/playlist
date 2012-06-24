@@ -201,6 +201,15 @@ button:active {
   box-pack: center;
 }
 #page {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  box-pack: center;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   box-flex: 1;
@@ -319,11 +328,26 @@ footer .other {
   border-color: transparent;
   font-family: "CantarellRegular";
   height: 256px;
-  width: 256px;
+  overflow: hidden;
   position: relative;
   -webkit-transition: border-color 0.25s ease-in-out;
   -moz-transition: border-color 0.25s ease-in-out;
   transition: border-color 0.25s ease-in-out;
+  width: 256px;
+}
+.song.uploading .progress {
+  display: block;
+}
+.song.loading .info,
+.song.loading .controls {
+  display: none;
+}
+.song.loading .progress {
+  display: block;
+}
+.song.loading .progress .bar {
+  background-color: rgba(255,255,255,0.5);
+  width: 100%;
 }
 .song.selected,
 .song.playing {
@@ -380,13 +404,29 @@ footer .other {
   background-image: url("../images/cross.svg");
 }
 .song .artwork,
+.song .progress,
 .song .info,
 .song .controls {
   position: absolute;
 }
 .song .artwork {
+  background-color: rgba(51,51,51,0.8);
   height: 256px;
+}
+.song .artwork,
+.song .progress {
   width: 256px;
+}
+.song .progress {
+  display: none;
+}
+.song .progress .bar {
+  background-color: rgba(71,135,237,0.5);
+  height: 20px;
+  -webkit-transition: width 0.1s linear;
+  -moz-transition: width 0.1s linear;
+  transition: width 0.1s linear;
+  width: 15%;
 }
 .song .info,
 .song .controls {

@@ -8,8 +8,13 @@ var s = new Song({title: 'Rolling in the Deep',
 var p = new Playlist();
 p.add(s);
 
-var v = new SongView({model: s});
-var el = v.render().el
-$('#page').empty().append(el);
+$('#page').empty();
+for (var i = 0; i < 4; ++i) {
+  var v = new SongView({model: s});
+  var el = v.render().el
+  $('#page').append(el);
 
-//$(el).addClass('playing');
+  i == 0 && $(el).addClass('loading').find('img').attr('src', '');
+  i == 1 && $(el).addClass('uploading');
+  i == 2 && $(el).addClass('playing');
+}
