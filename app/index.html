@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html manifest="playlist.appcache">
+<head>
+  <title>Playlist</title>
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <!-- These scripts will later be minified/cached with main.js -->
+  <script src="js/ext/jquery.js"></script>
+  <script src="js/ext/underscore.js"></script>
+  <script src="js/ext/handlebars.js"></script>
+  <script src="js/ext/backbone.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>Playlist</h1>
+    <div id="nowplaying">
+      <label>Now playing:</label>
+      <div id="np-song">Nothing</div>
+    </div>
+    <div id="controls">
+      <button id="c-prev">&larr;</button>
+      <button id="c-play">Play</button>
+      <button id="c-next">&rarr;</button>
+    </div>
+  </header>
+
+  <section id="page" class="dropzone"></section>
+
+  <section id="status">
+    <div class="progress">
+      <div class="bar"></div>
+    </div>
+    <div class="message"></div>
+  </section>
+
+  <footer>
+    <span class="my-copy">© 2012 Arunjit Singh</span>
+    <span class="other">Some stuff like fonts have other copyrights</span>
+  </footer>
+
+
+  <script id="song-tpl" type="text/x-handlebars-template">
+    <img class="artwork" src="{{artwork}}"></img>
+    <div class="info">
+      <div class="main">
+        <div class="title">{{title}}</div>
+        <div class="duration">{{duration}}</div>
+      </div>
+      <div class="detail">
+        <div class="artist">{{artist}}</div>
+        <div class="album">{{album}}</div>
+        <div class="year">{{year}}</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="play"></button>
+      <button class="delete"></button>
+    </div>
+  </script>
+
+  <script id="np-song-tpl" type="text/x-handlebars-template">
+    <span class="np-title">{{title}}</span>
+    <span class="np-artist">{{artist}}</span>
+    <span class="np-album">{{album}}</span>
+  </script>
+
+
+  <script src="js/playlist.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

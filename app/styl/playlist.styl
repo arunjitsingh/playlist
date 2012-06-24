@@ -1,0 +1,96 @@
+@import "nib"
+@import "aj/colors"
+
+.song
+  border: 10px solid
+  border-color: transparent
+  font-family: "CantarellRegular"
+  height: 256px
+  width: 256px
+  position: relative
+  transition: border-color .25s ease-in-out
+  &.selected
+  &.playing
+    border-color: aj-rgba(black, .9)
+    .info
+    .controls
+      background-color: aj-rgba(black, .75)
+      .title
+      .artist
+      .album
+        color: #ccc
+    .play
+      background-image: url(../images/pause_white.svg)
+    .play:hover
+      background-image: url(../images/pause.svg)
+    .delete
+      background-image: url(../images/cross_white.svg)
+  button
+    background-position: center center
+    background-size: 50% 50%
+    height: 20px
+    margin: 0
+    min-width: 20px
+    padding: 0
+    width: 20px
+  .play
+    background-image: url(../images/play.svg)
+  .delete,
+  .delete:hover
+    background-image: url(../images/cross.svg)
+  .artwork
+  .info
+  .controls
+    position: absolute
+  .artwork
+    height: 256px
+    width: 256px
+  .info
+  .controls
+    background-color: aj-rgba(white, .75)
+    height: 40px
+    text-transform: uppercase
+    top: 216px
+    transition: background-color .25s ease-in-out
+  .controls
+    left: 236px
+  .info
+    width: 236px
+    .main
+    .detail
+      box: horizontal
+      box-align: center
+      height: 16px
+      padding: 3px
+    .main
+      .title
+        box-flex: 1
+        font-size: 14px
+        line-height: 14px
+    .detail
+      padding-top: 0
+      .artist
+      .album
+        box-flex: 1
+        font-size: 12px
+        line-height: 12px
+      .album
+        margin-right: 2px
+        text-align: right
+    .title
+    .artist
+      font-family: "CantarellBold"
+    .title
+    .artist
+    .album
+      color: #292929
+      overflow: ellipsis
+    .duration
+    .year
+      color: #7a7a7a
+      font-size: 10px
+      line-height: 10px
+      padding-top: 1px
+      text-align: right
+
+      
