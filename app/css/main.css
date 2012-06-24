@@ -216,6 +216,9 @@ button:active {
   overflow-x: hidden;
   overflow-y: scroll;
 }
+#page #playlist {
+  margin: 0 auto;
+}
 #status {
   display: -webkit-box;
   display: -moz-box;
@@ -326,6 +329,7 @@ footer .other {
 .song {
   border: 10px solid;
   border-color: transparent;
+  display: inline-block;
   font-family: "CantarellRegular";
   height: 256px;
   overflow: hidden;
@@ -335,17 +339,17 @@ footer .other {
   transition: border-color 0.25s ease-in-out;
   width: 256px;
 }
-.song.uploading .progress {
+.song[data-state="uploading"] .progress {
   display: block;
 }
-.song.loading .info,
-.song.loading .controls {
+.song[data-state="loading"] .info,
+.song[data-state="loading"] .controls {
   display: none;
 }
-.song.loading .progress {
+.song[data-state="loading"] .progress {
   display: block;
 }
-.song.loading .progress .bar {
+.song[data-state="loading"] .progress .bar {
   background-color: rgba(255,255,255,0.5);
   width: 100%;
 }

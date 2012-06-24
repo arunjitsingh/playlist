@@ -4,16 +4,17 @@
 .song
   border: 10px solid
   border-color: transparent
+  display: inline-block
   font-family: "CantarellRegular"
   height: 256px
   overflow: hidden
   position: relative
   transition: border-color .25s ease-in-out
   width: 256px
-  &.uploading
+  &[data-state="uploading"]
     .progress
       display: block
-  &.loading
+  &[data-state="loading"]
     .info
     .controls
       display: none
