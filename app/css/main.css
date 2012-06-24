@@ -108,6 +108,7 @@ body {
   overflow: hidden;
 }
 body header {
+  background-color: rgba(0,0,0,0.75);
   border-bottom: 1px solid #f1f1f1;
   display: -webkit-box;
   display: -moz-box;
@@ -118,13 +119,13 @@ body header {
   -webkit-box-align: center;
   -moz-box-align: center;
   box-align: center;
-  color: #555;
+  color: #888;
   height: 50px;
   padding: 5px 15px;
   text-transform: uppercase;
 }
 body header h1 {
-  color: #333;
+  color: #fcfcfc;
   font-family: "SansumiExtraBoldRegular";
   font-size: 24px;
   font-weight: bold;
@@ -184,7 +185,7 @@ button:active {
   -webkit-box-orient: horizontal;
   -moz-box-orient: horizontal;
   box-orient: horizontal;
-  color: #555;
+  color: #888;
   font-size: 14px;
 }
 #nowplaying {
@@ -194,7 +195,7 @@ button:active {
   padding: 0 20px;
 }
 #nowplaying label {
-  color: #888;
+  color: #555;
 }
 #controls {
   -webkit-box-align: center;
@@ -203,6 +204,16 @@ button:active {
   -webkit-box-pack: center;
   -moz-box-pack: center;
   box-pack: center;
+}
+#controls button {
+  color: #888;
+}
+#controls button:hover,
+#controls button:focus {
+  color: #333;
+}
+#controls #c-play {
+  width: 75px;
 }
 #page {
   display: -webkit-box;
@@ -256,6 +267,7 @@ button:active {
   padding: 0 10px 0 5px;
 }
 footer {
+  background-color: rgba(0,0,0,0.5);
   border-top: 1px solid #f1f1f1;
   display: -webkit-box;
   display: -moz-box;

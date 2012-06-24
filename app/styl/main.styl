@@ -20,21 +20,23 @@ body
   overflow: hidden
 
   header
+    background-color: aj-rgba(black, .75)
     border-bottom: 1px solid #f1f1f1
     box: horizontal
     box-align: center
-    color: #555
+    color: #888
     height: 50px
     padding: 5px 15px
     text-transform: uppercase
     h1
       // "Playlist" - app name
-      color: #333
+      color: #fcfcfc
       font-family: "SansumiExtraBoldRegular"
       font-size: 24px
       font-weight: bold
       line-height: 24px
-    h1, #controls
+    h1
+    #controls
       box-flex: 1
 
 
@@ -69,7 +71,7 @@ button
 #nowplaying
 #controls
   box: horizontal
-  color: #555
+  color: #888
   font-size: 14px
 
 
@@ -77,12 +79,20 @@ button
   box-flex: 2
   padding: 0 20px;
   label
-    color: #888
+    color: #555
 
 
 #controls
   box-align: center
   box-pack: center
+  button
+    color: #888
+    &:hover
+    &:focus
+      color: #333
+  #c-play
+    // needs to accomodate "Play" and "Pause" without changing width
+    width: 75px
 
 
 #page
@@ -116,6 +126,7 @@ button
 
 
 footer
+  background-color: aj-rgba(black, .5)
   border-top: 1px solid #f1f1f1
   box: horizontal
   box-align: center
