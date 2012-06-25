@@ -20,11 +20,11 @@ body
   overflow: hidden
 
   header
-    background-color: aj-rgba(black, .75)
+    background-color: aj-rgba(black, .5)
     border-bottom: 1px solid #f1f1f1
     box: horizontal
     box-align: center
-    color: #888
+    color: #eee
     height: 50px
     padding: 5px 15px
     text-transform: uppercase
@@ -35,6 +35,7 @@ body
       font-size: 24px
       font-weight: bold
       line-height: 24px
+      text-shadow: 0 1px 1px aj-rgba(black, .5)
     h1
     #controls
       box-flex: 1
@@ -71,7 +72,7 @@ button
 #nowplaying
 #controls
   box: horizontal
-  color: #888
+  color: #eee
   font-size: 14px
 
 
@@ -86,10 +87,15 @@ button
   box-align: center
   box-pack: center
   button
-    color: #888
+    color: #eee
+    text-shadow: 0 1px 1px aj-rgba(black, .5)
     &:hover
     &:focus
       color: #333
+    &:hover
+    &:focus
+    &:active
+      text-shadow: none
   #c-play
     // needs to accomodate "Play" and "Pause" without changing width
     width: 75px
@@ -135,6 +141,7 @@ footer
   font-size: 12px
   line-height: 12px
   height: 32px
+  text-shadow: 0 1px 1px aj-rgba(white, .5)
   text-transform: uppercase
   .my-copy
     color: #333

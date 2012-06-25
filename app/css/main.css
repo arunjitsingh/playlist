@@ -108,7 +108,7 @@ body {
   overflow: hidden;
 }
 body header {
-  background-color: rgba(0,0,0,0.75);
+  background-color: rgba(0,0,0,0.5);
   border-bottom: 1px solid #f1f1f1;
   display: -webkit-box;
   display: -moz-box;
@@ -119,7 +119,7 @@ body header {
   -webkit-box-align: center;
   -moz-box-align: center;
   box-align: center;
-  color: #888;
+  color: #eee;
   height: 50px;
   padding: 5px 15px;
   text-transform: uppercase;
@@ -130,6 +130,7 @@ body header h1 {
   font-size: 24px;
   font-weight: bold;
   line-height: 24px;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
 }
 body header h1,
 body header #controls {
@@ -185,7 +186,7 @@ button:active {
   -webkit-box-orient: horizontal;
   -moz-box-orient: horizontal;
   box-orient: horizontal;
-  color: #888;
+  color: #eee;
   font-size: 14px;
 }
 #nowplaying {
@@ -206,11 +207,17 @@ button:active {
   box-pack: center;
 }
 #controls button {
-  color: #888;
+  color: #eee;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
 }
 #controls button:hover,
 #controls button:focus {
   color: #333;
+}
+#controls button:hover,
+#controls button:focus,
+#controls button:active {
+  text-shadow: none;
 }
 #controls #c-play {
   width: 75px;
@@ -285,6 +292,7 @@ footer {
   font-size: 12px;
   line-height: 12px;
   height: 32px;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.5);
   text-transform: uppercase;
 }
 footer .my-copy {
@@ -347,15 +355,20 @@ footer .other {
   border-color: transparent;
   display: inline-block;
   font-family: "CantarellRegular";
-  height: 256px;
+  height: 360px;
   position: relative;
   -webkit-transition: border-color 0.25s ease-in-out;
   -moz-transition: border-color 0.25s ease-in-out;
   transition: border-color 0.25s ease-in-out;
-  width: 256px;
+  width: 360px;
 }
 .song[data-state="uploading"] .progress {
   display: block;
+}
+.song[data-state="uploading"] .progress .bar {
+  -webkit-animation: none;
+  -moz-animation: none;
+  animation: none;
 }
 .song[data-state="loading"] .info,
 .song[data-state="loading"] .controls {
@@ -365,7 +378,10 @@ footer .other {
   display: block;
 }
 .song[data-state="loading"] .progress .bar {
-  background-color: rgba(255,255,255,0.5);
+  -webkit-animation: pulse 1s infinite alternate ease-in-out;
+  -moz-animation: pulse 1s infinite alternate ease-in-out;
+  animation: pulse 1s infinite alternate ease-in-out;
+  background-color: rgba(255,255,255,0.75);
   width: 100%;
 }
 .song.selected,
@@ -411,11 +427,11 @@ footer .other {
   -webkit-background-size: 50% 50%;
   -moz-background-size: 50% 50%;
   background-size: 50% 50%;
-  height: 20px;
+  height: 30px;
   margin: 0;
   min-width: 20px;
   padding: 0;
-  width: 20px;
+  width: 30px;
 }
 .song .play {
   background-image: url("../images/play.svg");
@@ -433,11 +449,11 @@ footer .other {
 }
 .song .artwork {
   background-color: rgba(51,51,51,0.8);
-  height: 256px;
+  height: 360px;
 }
 .song .artwork,
 .song .progress {
-  width: 256px;
+  width: 360px;
 }
 .song .progress {
   display: none;
@@ -453,18 +469,18 @@ footer .other {
 .song .info,
 .song .controls {
   background-color: rgba(255,255,255,0.75);
-  height: 40px;
+  height: 60px;
   text-transform: uppercase;
-  top: 216px;
+  top: 300px;
   -webkit-transition: background-color 0.25s ease-in-out;
   -moz-transition: background-color 0.25s ease-in-out;
   transition: background-color 0.25s ease-in-out;
 }
 .song .controls {
-  left: 236px;
+  left: 330px;
 }
 .song .info {
-  width: 236px;
+  width: 330px;
 }
 .song .info .main,
 .song .info .detail {
@@ -477,15 +493,15 @@ footer .other {
   -webkit-box-align: center;
   -moz-box-align: center;
   box-align: center;
-  height: 16px;
+  height: 24px;
   padding: 3px;
 }
 .song .info .main .title {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   box-flex: 1;
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 16px;
+  line-height: 16px;
 }
 .song .info .detail {
   padding-top: 0;
@@ -495,8 +511,8 @@ footer .other {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   box-flex: 1;
-  font-size: 12px;
-  line-height: 12px;
+  font-size: 14px;
+  line-height: 14px;
 }
 .song .info .detail .album {
   margin-right: 2px;
@@ -517,8 +533,63 @@ footer .other {
 .song .info .duration,
 .song .info .year {
   color: #7a7a7a;
-  font-size: 10px;
-  line-height: 10px;
+  font-size: 12px;
+  line-height: 12px;
   padding-top: 1px;
   text-align: right;
+}
+@-moz-keyframes pulse {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  100% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+}
+@-webkit-keyframes pulse {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  100% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+}
+@-o-keyframes pulse {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  100% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+}
+@-ms-keyframes pulse {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  100% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+}
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  100% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
 }

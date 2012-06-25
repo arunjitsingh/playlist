@@ -35,3 +35,8 @@ var App = new PlaylistRouter();
 Backbone.history.start({pushState: true});
 
 
+var song = new Song(JSON.parse(stubs.getResponse()).content[0]);
+var view = new SongView({model: song});
+var el = view.render().el;
+$(el).get(0).dataset.state = 'uploading'
+$('#playlist').append(el);
