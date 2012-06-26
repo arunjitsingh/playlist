@@ -9,6 +9,21 @@
  *     @see http://www.opensource.org/licenses/mit-license.php for details.
  */
 
+
+/**
+ * Joins path strings. Doesn't normalize `.` or `..` in paths.
+ * @param {string...} var_args The paths to join.
+ * @return {string} The joined path.
+ */
+function join(var_args) {
+  var path = Array.prototype.join.call(arguments, '/');
+  return path.replace(/\/\//g, '/');
+}
+
+
+var WORKER_FILE = join(JS_FILES_DIR || '', 'worker.js');
+
+
 //================= Models =================
 
 
@@ -23,8 +38,13 @@ var Song = Backbone.Model.extend({
     'duration': '',     // {string} Duration (mm:ss)
     'artwork': '',      // {string} Artwork URL
     'url': '',          // {string} URL of the song file
-    'year': 1900,       // {number} Year of release
-    'state': 'loading', // {string} State (loading, uploading, etc)
+    'year': '',         // {string} Year of release
+    'filename': '',     // {string} File name
+
+    'state': '',        // {string} State (playing, paused, etc)
+
+    'load.state': 'loading',  // {string} Load state (loading, uploading, etc)
+    'load.progress': 0,       // {number} Percent loaded (uploading only)
 
     'local.guid': '',
     'local.artwork': '',
@@ -36,16 +56,21 @@ var Song = Backbone.Model.extend({
     this.set({'local.guid': Date.now().toString(16)});
     this.on('change:local.url', this.updateState);
     this.on('change:url', this.updateState);
+    this.playable = false;
   },
 
   updateState: function() {
     if (this.get('local.url') || this.get('url')) {
-      this.set({'state': 'playable'});
+      this.playable = true;
     }
   },
 
   isPlayable: function() {
-    return this.get('state') == 'playable';
+    return !!this.playable;
+  },
+
+  isPlaying: function() {
+    return this.get('state') == 'playing';
   }
 });
 
@@ -114,56 +139,6 @@ var Player = Backbone.Model.extend({
 });
 
 
-//----------------- SongWorker -----------------
-
-
-
-/** Initializes a worker and sends it the file buffer. */
-var SongWorker = Song.extend({
-  defaults: {
-    buffer: new ArrayBuffer(0)
-  },
-
-  initialize: function() {
-    _.bindAll(this, 'workerMessage_');
-    this.worker_ = new Worker('js/worker.js');
-    this.worker_.addEventListener('message', this.workerMessage_, false);
-    this.worker_.postMessage({'message': 'init', 'buffer': this.get('buffer')});
-  },
-
-  setLocalTags_: function(tags) {
-    var validKeys = ['title', 'artist', 'album', 'duration', 'local.guid',
-                     'local.artwork', 'local.url'];
-    var obj = {};
-    validKeys.forEach(function(key) {
-      obj[key] = tags[key] || '';
-    });
-    this.set(obj);
-  },
-
-  updateWithServerResponse_: function(content) {},
-
-  workerMessage_: function(event) {
-    switch (event.data.message) {
-      case 'loading':
-        this.set({'state': 'loading'});
-        break;
-      case 'uploading':
-        this.set({'state': 'uploading'});
-        break;
-      case 'loaded':
-        this.setLocalTags_(event.data.tags);
-        break;
-      case 'uploaded':
-        this.updateWithServerResponse_(event.data.content)
-        break;
-      case 'done':
-        this.worker_.terminate();
-    }
-  }
-});
-
-
 //================= Views =================
 
 
@@ -175,10 +150,16 @@ var SongView = Backbone.View.extend({
 
   template: Handlebars.compile($('#song-tpl').html()),
 
+  events: {
+    'click .delete': 'remove'
+  },
+
   initialize: function() {
-    _.bindAll(this, 'render', 'stateChanged');
+    _.bindAll(this,
+              'render', 'loadStateChanged', 'stateChanged', 'remove');
     this.model.on('change', this.render);
     this.model.on('change:state', this.stateChanged);
+    this.model.on('change:load.state', this.loadStateChange);
   },
 
   render: function() {
@@ -188,6 +169,83 @@ var SongView = Backbone.View.extend({
 
   stateChanged: function() {
     $(this.el).get(0).dataset.state = this.model.get('state');
+  },
+
+  loadStateChanged: function() {
+    $(this.el).get(0).dataset.loader = this.model.get('load.state');
+  },
+
+  remove: function() {
+    this.model.collection.remove(this.model);
+  }
+
+});
+
+
+//----------------- SongWorker -----------------
+
+
+
+/** Handles interactions between a Song and it's worker. */
+var SongWorker = SongView.extend({
+
+  initialize: function() {
+    _.bindAll(this, 'workerMessage_');
+    this.worker = new Worker(WORKER_FILE);
+    this.worker.addEventListener('message', this.workerMessage_, false);
+    // The worker is initialized by the worker pool.
+  },
+
+  setLocalTags_: function(tags) {
+    var validKeys = ['title', 'artist', 'album', 'duration', 'year',
+                     'local.guid', 'local.artwork', 'local.url'];
+    var obj = {};
+    validKeys.forEach(function(key) {
+      tags[key] && (obj[key] = tags[key]);
+    });
+    this.model.set(obj);
+  },
+
+  updateWithServerResponse_: function(content) {
+    var validKeys = ['artwork', 'url'];
+    var obj = {};
+    validKeys.forEach(function(key) {
+      tags[key] && (obj[key] = tags[key]);
+    });
+    this.model.set(obj);
+  },
+
+  workerMessage_: function(event) {
+    switch (event.data.message) {
+      case 'loading':
+        this.model.set({'load.state': 'loading'});
+        break;
+      case 'uploading':
+        this.model.set({'load.state': 'uploading',
+                  'load.progress': event.data.progress});
+        break;
+      case 'tags':
+        this.setLocalTags_(event.data.tags);
+        break;
+      case 'uploaded':
+        this.updateWithServerResponse_(event.data.content)
+        break;
+    }
+  }
+});
+
+
+
+var PlaylistView = Backbone.View.extend({
+
+  initialize: function() {
+    _.bindAll(this, 'addOne');
+    this.collection.on('add', this.addOne);
+  },
+
+  addOne: function(song) {
+    var view = new SongView({model: song});
+    $(this.el).append(view.render().el);
   }
 
 });
@@ -196,23 +254,33 @@ var SongView = Backbone.View.extend({
 
 var NowPlayingView = Backbone.View.extend({
 
-  className: 'np-song',
+  el: $('#np-song'),
 
-  template: Handlebars.compile($("np-song-tpl").html())
+  template: Handlebars.compile($("#np-song-tpl").html()),
+
+  render: function(song) {
+    $(this.el).empty().append(this.template(song.toJSON()));
+    return this;
+  }
 });
 
 
-//================= Router =================
 
+var PlayerView = Backbone.View.extend({
 
+  el: $('header #controls'),
 
-var PlaylistRouter = Backbone.Router.extend({
-  routes: {
-    '': 'home'
+  events: {
+    'click #c-prev': 'previous',
+    'click #c-next': 'next',
+    'click #c-play': 'playPause'
   },
 
-  home: function() {
-    var $playlist = $('#playlist').empty();
-    $playlist.on('dragover', this.dragover);
-  }
+  initialize: function() {
+    this.playlist = new Playlist();
+  },
+
+  previous: function() {},
+  next: function() {},
+  playPause: function() {}
 });

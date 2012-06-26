@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html manifest="playlist.appcache">
+<!-- <html manifest="playlist.appcache"> -->
+<html>
 <head>
   <title>Playlist</title>
   <link rel="stylesheet" type="text/css" href="css/main.css">
@@ -45,6 +46,7 @@
     <img class="artwork" src="{{artwork}}"></img>
     <div class="progress">
       <div class="bar"></div>
+      <div class="filename">{{filename}}</div>
     </div>
     <div class="info">
       <div class="main">
@@ -58,17 +60,25 @@
       </div>
     </div>
     <div class="controls">
-      <button class="play"></button>
       <button class="delete"></button>
     </div>
   </script>
+  <!--
+  <div class="controls">
+    <button class="play"></button>
+    <button class="delete"></button>
+  </div>
+  -->
 
   <script id="np-song-tpl" type="text/x-handlebars-template">
     <span class="np-title">{{title}}</span>
+    <span class="np-album">"{{album}}"</span>
     <span class="np-artist">{{artist}}</span>
-    <span class="np-album">{{album}}</span>
   </script>
 
+  <script>
+    JS_FILES_DIR = 'js';
+  </script>
 
   <script src="js/playlist.js"></script>
   <script src="js/main.js"></script>

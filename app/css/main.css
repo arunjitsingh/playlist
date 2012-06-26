@@ -198,6 +198,10 @@ button:active {
 #nowplaying label {
   color: #555;
 }
+#nowplaying #np-song {
+  font-family: "CantarellBold";
+  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
 #controls {
   -webkit-box-align: center;
   -moz-box-align: center;
@@ -240,6 +244,9 @@ button:active {
 }
 #page #playlist {
   margin: 0 auto;
+}
+.dropzone.dragover {
+  background-color: rgba(40,185,48,0.4);
 }
 #status {
   display: -webkit-box;
@@ -362,64 +369,73 @@ footer .other {
   transition: border-color 0.25s ease-in-out;
   width: 360px;
 }
-.song[data-state="uploading"] .progress {
+.song[data-loader="uploading"] .progress {
   display: block;
 }
-.song[data-state="uploading"] .progress .bar {
+.song[data-loader="uploading"] .progress .bar {
   -webkit-animation: none;
   -moz-animation: none;
   animation: none;
 }
-.song[data-state="loading"] .info,
-.song[data-state="loading"] .controls {
+.song[data-loader="loading"] .info,
+.song[data-loader="loading"] .controls {
   display: none;
 }
-.song[data-state="loading"] .progress {
+.song[data-loader="loading"] .progress {
   display: block;
 }
-.song[data-state="loading"] .progress .bar {
+.song[data-loader="loading"] .progress .bar {
   -webkit-animation: pulse 1s infinite alternate ease-in-out;
   -moz-animation: pulse 1s infinite alternate ease-in-out;
   animation: pulse 1s infinite alternate ease-in-out;
   background-color: rgba(255,255,255,0.75);
   width: 100%;
 }
-.song.selected,
-.song.playing {
+.song[data-loader="done"] .progress {
+  -webkit-animation: fadeout 2s ease-in-out;
+  -moz-animation: fadeout 2s ease-in-out;
+  animation: fadeout 2s ease-in-out;
+}
+.song[data-state="playable"] .info,
+.song[data-state="playable"] .controls {
+  display: block;
+}
+.song[data-state="playing"],
+.song[data-state="paused"] {
   border-color: rgba(0,0,0,0.9);
 }
-.song.selected .info,
-.song.playing .info,
-.song.selected .controls,
-.song.playing .controls {
+.song[data-state="playing"] .info,
+.song[data-state="paused"] .info,
+.song[data-state="playing"] .controls,
+.song[data-state="paused"] .controls {
   background-color: rgba(0,0,0,0.75);
 }
-.song.selected .info .title,
-.song.playing .info .title,
-.song.selected .controls .title,
-.song.playing .controls .title,
-.song.selected .info .artist,
-.song.playing .info .artist,
-.song.selected .controls .artist,
-.song.playing .controls .artist,
-.song.selected .info .album,
-.song.playing .info .album,
-.song.selected .controls .album,
-.song.playing .controls .album {
+.song[data-state="playing"] .info .title,
+.song[data-state="paused"] .info .title,
+.song[data-state="playing"] .controls .title,
+.song[data-state="paused"] .controls .title,
+.song[data-state="playing"] .info .artist,
+.song[data-state="paused"] .info .artist,
+.song[data-state="playing"] .controls .artist,
+.song[data-state="paused"] .controls .artist,
+.song[data-state="playing"] .info .album,
+.song[data-state="paused"] .info .album,
+.song[data-state="playing"] .controls .album,
+.song[data-state="paused"] .controls .album {
   color: #ccc;
 }
-.song.selected .play,
-.song.playing .play {
+.song[data-state="playing"] .play,
+.song[data-state="paused"] .play {
   background-image: url("../images/pause_white.svg");
 }
-.song.selected .play:hover,
-.song.playing .play:hover,
-.song.selected .play:focus,
-.song.playing .play:focus {
+.song[data-state="playing"] .play:hover,
+.song[data-state="paused"] .play:hover,
+.song[data-state="playing"] .play:focus,
+.song[data-state="paused"] .play:focus {
   background-image: url("../images/pause.svg");
 }
-.song.selected .delete,
-.song.playing .delete {
+.song[data-state="playing"] .delete,
+.song[data-state="paused"] .delete {
   background-image: url("../images/cross_white.svg");
 }
 .song button {
@@ -458,6 +474,10 @@ footer .other {
 .song .progress {
   display: none;
 }
+.song .progress .bar,
+.song .progress .filename {
+  position: absolute;
+}
 .song .progress .bar {
   background-color: rgba(71,135,237,0.5);
   height: 20px;
@@ -465,6 +485,17 @@ footer .other {
   -moz-transition: width 0.1s linear;
   transition: width 0.1s linear;
   width: 15%;
+}
+.song .progress .filename {
+  color: #333;
+  font-family: "CantarellBold";
+  font-size: 12px;
+  line-height: 12px;
+  margin-top: 4px;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  width: 100%;
 }
 .song .info,
 .song .controls {
@@ -511,8 +542,8 @@ footer .other {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   box-flex: 1;
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 16px;
+  line-height: 16px;
 }
 .song .info .detail .album {
   margin-right: 2px;
@@ -530,13 +561,35 @@ footer .other {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.song .info .album {
+  font-family: "CantarellBoldOblique";
+  padding-right: 3px;
+}
 .song .info .duration,
 .song .info .year {
   color: #7a7a7a;
   font-size: 12px;
   line-height: 12px;
-  padding-top: 1px;
   text-align: right;
+}
+#np-song {
+  margin-left: 3px;
+}
+#np-song .np-album,
+#np-song .np-artist {
+  font-size: 12px;
+  line-height: 12px;
+}
+#np-song .np-title {
+  font-family: "CantarellBold";
+  font-size: 14px;
+  line-height: 14px;
+}
+#np-song .np-album {
+  font-family: "CantarellOblique";
+}
+#np-song .np-artist {
+  font-family: "CantarellRegular";
 }
 @-moz-keyframes pulse {
   0% {
@@ -545,8 +598,8 @@ footer .other {
   }
 
   100% {
-    opacity: 0;
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    opacity: 0.3;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   }
 }
 @-webkit-keyframes pulse {
@@ -556,8 +609,8 @@ footer .other {
   }
 
   100% {
-    opacity: 0;
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    opacity: 0.3;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   }
 }
 @-o-keyframes pulse {
@@ -567,8 +620,8 @@ footer .other {
   }
 
   100% {
-    opacity: 0;
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    opacity: 0.3;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   }
 }
 @-ms-keyframes pulse {
@@ -578,8 +631,8 @@ footer .other {
   }
 
   100% {
-    opacity: 0;
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    opacity: 0.3;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   }
 }
 @keyframes pulse {
@@ -589,7 +642,82 @@ footer .other {
   }
 
   100% {
+    opacity: 0.3;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  }
+}
+@-moz-keyframes fadeout {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  99% {
     opacity: 0;
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+
+  100% {
+    display: none;
+  }
+}
+@-webkit-keyframes fadeout {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  99% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+
+  100% {
+    display: none;
+  }
+}
+@-o-keyframes fadeout {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  99% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+
+  100% {
+    display: none;
+  }
+}
+@-ms-keyframes fadeout {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  99% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+
+  100% {
+    display: none;
+  }
+}
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  99% {
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+
+  100% {
+    display: none;
   }
 }

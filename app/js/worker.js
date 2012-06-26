@@ -20,10 +20,15 @@ bytesToString = function(bytes) {
 };
 
 onMessage = function(event) {
-  var buf = event.data.buffer;
-  var bytes = new Uint8Array(buf);
-  var str = bytesToString(slice(bytes, 0, 2));
-  postMessage({'tags': str});
+  var file = event.data.file;
+  var reader = new FileReader();
+  reader.onload = function() {
+    buf = reader.result;
+    var bytes = new Uint8Array(buf);
+    var str = bytesToString(slice(bytes, 0, 3));
+    postMessage({'tags': str});
+  };
+  reader.readAsArrayBuffer(event.data.file);
 };
 
 addEventListener('message', onMessage, false);

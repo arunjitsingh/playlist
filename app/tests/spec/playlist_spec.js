@@ -25,8 +25,8 @@ describe('Song', function () {
     expect(this.song.get('artist')).toEqual('Adele');
   });
 
-  it('has a default state of "loading"', function() {
-    expect(this.song.get('state')).toEqual('loading');
+  it('has a default load state of "loading"', function() {
+    expect(this.song.get('load.state')).toEqual('loading');
   });
 
   it('should autogenerate a local ID', function() {
@@ -128,3 +128,41 @@ describe('Player', function() {
 
   });
 });
+
+
+
+// BlobBuilder = this.BlobBuilder || this.WebKitBlobBuilder;
+// 
+// 
+// describe('WorkerPool', function() {
+// 
+//   beforeEach(function() {
+//     this.pool = new WorkerPool();
+//   });
+// 
+//   it('should start off with an empty pool', function() {
+//     expect(this.pool.count()).toEqual(0);
+//   });
+// 
+//   it('should have zero files', function() {
+//     expect(this.pool.fileCount()).toEqual(0);
+//   });
+//   
+//   
+//   describe('with files', function() {
+//     
+//     beforeEach(function() {
+//       var bb = new BlobBuilder();
+//       bb.append('This is not an audio file so don\'t expect it to have tags');
+//       this.blob = bb.getBlob('text/plain');
+//     });
+//     
+//     it('should create a worker for a new file', function() {
+//       this.pool.add(this.blob);
+//       expect(this.pool.count()).toEqual(1);
+//       expect(this.pool.fileCount()).toEqual(1);
+//     });
+//     
+//   });
+// 
+// });

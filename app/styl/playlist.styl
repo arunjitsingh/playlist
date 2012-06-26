@@ -12,10 +12,11 @@ song-height = 360px
 song-width = 360px
 
 info-height = 60px
-control-button-size = 30px
+control-button-width = 30px
+control-button-height = 30px
 
 title-font-size = 16px
-artist-font-size = 14px
+artist-font-size = 16px
 other-font-size = 12px
 
 
@@ -28,12 +29,12 @@ other-font-size = 12px
   position: relative
   transition: border-color .25s ease-in-out
   width: song-width
-  &[data-state="uploading"]
+  &[data-loader="uploading"]
     .progress
       display: block
       .bar
         animation: none
-  &[data-state="loading"]
+  &[data-loader="loading"]
     .info
     .controls
       display: none
@@ -43,8 +44,15 @@ other-font-size = 12px
         animation: pulse 1s infinite alternate ease-in-out
         background-color: aj-rgba(white, .75)
         width: 100%
-  &.selected
-  &.playing
+  &[data-loader="done"]
+    .progress
+      animation: fadeout 2s ease-in-out
+  &[data-state="playable"]
+    .info
+    .controls
+      display: block
+  &[data-state="playing"]
+  &[data-state="paused"]
     border-color: aj-rgba(black, .9)
     .info
     .controls
@@ -63,11 +71,11 @@ other-font-size = 12px
   button
     background-position: center center
     background-size: 50% 50%
-    height: control-button-size
+    height: control-button-height
     margin: 0
     min-width: 20px
     padding: 0
-    width: control-button-size
+    width: control-button-width
   .play
     background-image: url(../images/play.svg)
   .delete,
@@ -88,10 +96,23 @@ other-font-size = 12px
   .progress
     display: none
     .bar
+    .filename
+      position: absolute
+    .bar
       background-color: aj-rgba(aj-blue, .5)
       height: 20px
       transition: width .1s linear
       width: 15%
+    .filename
+      color: #333
+      font-family: "CantarellBold"
+      font-size: 12px
+      line-height: 12px
+      margin-top: 4px
+      text-align: center
+      text-shadow: 0 1px 1px aj-rgba(white, .3)
+      text-transform: uppercase
+      width: 100%
   .info
   .controls
     background-color: aj-rgba(white, .75)
@@ -100,14 +121,14 @@ other-font-size = 12px
     top: sub(song-height, info-height)
     transition: background-color .25s ease-in-out
   .controls
-    left: sub(song-width, control-button-size)
+    left: sub(song-width, control-button-width)
   .info
-    width: sub(song-width, control-button-size)
+    width: sub(song-width, control-button-width)
     .main
     .detail
       box: horizontal
       box-align: center
-      height: sub(control-button-size, 6)
+      height: sub(control-button-height, 6)
       padding: 3px
     .main
       .title
@@ -132,12 +153,14 @@ other-font-size = 12px
     .album
       color: #292929
       overflow: ellipsis
+    .album
+      font-family: "CantarellBoldOblique"
+      padding-right: 3px
     .duration
     .year
       color: #7a7a7a
       font-size: other-font-size
       line-height: other-font-size
-      padding-top: 1px
       text-align: right
 
 
@@ -145,4 +168,29 @@ other-font-size = 12px
   0%
     opacity: 1
   100%
+    opacity: .3
+
+
+@keyframes fadeout
+  0%
+    opacity: 1
+  99%
     opacity: 0
+  100%
+    display: none
+
+
+#np-song
+  margin-left: 3px
+  .np-album
+  .np-artist
+    font-size: 12px
+    line-height: 12px
+  .np-title
+    font-family: "CantarellBold"
+    font-size: 14px
+    line-height: 14px
+  .np-album
+    font-family: "CantarellOblique"
+  .np-artist
+    font-family: "CantarellRegular"
