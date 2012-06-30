@@ -4,7 +4,6 @@
 
 __author__ = 'Arunjit Singh <arunjit@me.com>'
 
-import templates
 from handlers import base
 from handlers import playlist
 from storage import models

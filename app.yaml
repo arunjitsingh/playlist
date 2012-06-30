@@ -13,8 +13,3 @@ handlers:
 - url: /(user|playlist|song)?.*
   script: main.application
   login: admin
-
-
-libraries:
-- name: jinja2
-  version: latest
